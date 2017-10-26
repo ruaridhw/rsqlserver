@@ -1,0 +1,5 @@
+box: ruaridhw/rsqlserver
+build:
+  steps:
+    - jimhester/r-dependencies
+    - jimhester/r-check
