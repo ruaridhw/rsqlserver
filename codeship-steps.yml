@@ -1,0 +1,4 @@
+- service: sqlserver
+  command: sleep 90 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'P@ssw0rd1' -Q "CREATE DATABASE rsqlserverdb;"
+- service: package
+  command: Rscript -e 'devtools::check(document = FALSE, check_dir = ".", cleanup = FALSE)'
