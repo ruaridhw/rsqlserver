@@ -11,4 +11,5 @@ install:
   - docker build -t rsqlserver .
 
 script:
-  - docker run -t -a STDERR --link=mssqldb rsqlserver Rscript -e 'devtools::check(document = FALSE, check_dir = ".")'
+  - docker run -t --link=mssqldb rsqlserver Rscript -e 'devtools::check(document = FALSE, check_dir = ".")'
+  - if [ $? -eq 1 ]; then exit 1; fi
