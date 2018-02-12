@@ -22,5 +22,5 @@ script:
     docker run -t --network sqlserver_net --name pkgcheck rsqlserver Rscript \
       -e 'devtools::install_dev_deps()' \
       -e 'devtools::install(".")' \
-      -e 'library(rsqlserver);con <- dbConnect("SqlServer", url = "Server=mssqldb;Database=rsqlserverdb;User Id=sa;Password=Password12!;");dbGetInfo(con, "State")$State'
+      -e 'library(rsqlserver);server<-"mssqldb";dbname<-"rsqlserverdb";user<-"sa";password<-"Password12!";url <- sprintf("Server=%s;Database=%s;User Id=%s;Password=%s;",server, dbname, user, password);con <- dbConnect("SqlServer", url = url);testthat::expect_equal(dbGetInfo(con, "State")$State, "Open")'
   - exit 0
