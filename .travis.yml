@@ -20,10 +20,6 @@ install:
 script:
   - |
     docker run -t --network sqlserver_net --name pkgcheck rsqlserver Rscript \
-      -e 'devtools::install_dev_deps()' \
-      -e 'devtools::check(document = FALSE, check_dir = ".")'
-  - docker cp pkgcheck:/usr/local/R/rsqlserver.Rcheck/00check.log . 
-  - cat 00check.log
-  - docker cp pkgcheck:/usr/local/R/rsqlserver.Rcheck/tests/test-all.Rout.fail .
-  - cat test-all.Rout.fail
+      -e 'identical(Sys.getenv("TRAVIS"), "true")' \
+      -e 'print(Sys.getenv("TRAVIS"))'
   - exit 0
