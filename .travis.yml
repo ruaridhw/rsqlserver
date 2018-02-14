@@ -19,7 +19,7 @@ install:
 
 script:
   - |
-    docker run -e CI=true -e CONTINUOUS_INTEGRATION=true $(printenv | grep -E '^TRAVIS' | sed 's/^/-e /') \
+    docker run -e CI=true -e CONTINUOUS_INTEGRATION=true $(printenv | grep -E '^TRAVIS' | sed 's/^/-e /' | xargs) \
       -t --network sqlserver_net --name pkgcheck rsqlserver Rscript \
         -e 'identical(Sys.getenv("TRAVIS"), "true")' \
         -e 'print(Sys.getenv("TRAVIS"))'
