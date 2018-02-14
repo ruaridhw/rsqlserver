@@ -19,7 +19,8 @@ install:
 
 script:
   - |
-    docker run -t --network sqlserver_net --name pkgcheck rsqlserver Rscript \
-      -e 'identical(Sys.getenv("TRAVIS"), "true")' \
-      -e 'print(Sys.getenv("TRAVIS"))'
+    docker run -e CI=true -e TRAVIS=true -e CONTINUOUS_INTEGRATION=true \
+      -t --network sqlserver_net --name pkgcheck rsqlserver Rscript \
+        -e 'identical(Sys.getenv("TRAVIS"), "true")' \
+        -e 'print(Sys.getenv("TRAVIS"))'
   - exit 0
