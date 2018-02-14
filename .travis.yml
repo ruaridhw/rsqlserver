@@ -2,27 +2,18 @@ services:
   - docker
 
 before_install:
-  - docker pull microsoft/mssql-server-linux:latest
   - docker network create sqlserver_net
-  - |
-    docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=Password12!' \
-      --network sqlserver_net -p 1433:1433 --name mssqldb -d microsoft/mssql-server-linux
-  - sleep 90
-  - docker cp inst/setup.sql mssqldb:.
-  - |
-    docker exec -t mssqldb /opt/mssql-tools/bin/sqlcmd \
-      -S localhost -U SA -P 'Password12!' \
-      -i setup.sql
 
 install:
   - docker build -t rsqlserver -f .ci/Dockerfile .
 
 script:
+  - printenv | grep -E '^TRAVIS' | sed 's/^/-e /' | xargs
   - |
-    docker run -e CI=true -e CONTINUOUS_INTEGRATION=true $(printenv | grep -E '^TRAVIS' | sed 's/^/-e /' | xargs) \
+    docker run -e CI=true -e CONTINUOUS_INTEGRATION=true "$(printenv | grep -E '^TRAVIS' | sed 's/^/-e /' | xargs)" \
       -t --network sqlserver_net --name pkgcheck rsqlserver Rscript \
         -e 'identical(Sys.getenv("TRAVIS"), "true")' \
-        -e 'print(Sys.getenv("TRAVIS"))'
-        -e 'print(Sys.getenv("CI"))'
+        -e 'print(Sys.getenv("TRAVIS"))' \
+        -e 'print(Sys.getenv("CI"))' \
         -e 'print(Sys.getenv("TRAVIS_COMMIT"))'
   - exit 0
